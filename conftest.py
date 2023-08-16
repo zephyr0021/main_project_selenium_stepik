@@ -17,5 +17,5 @@ def browser(request):
     if language is None:
         raise pytest.UsageError("--language is None")
     yield browser
-    browser.quit()
+    # browser.quit()
 
