@@ -1,7 +1,38 @@
 import time
 import pytest
+
+from pages.base_page import BasePage
+from pages.login_page import LoginPage
 from .pages.product_page import ProductPage
 from .pages.locators import ProductPageLocators
+
+
+@pytest.mark.register_guest
+class TestUserAddToBasketFromProductPage:
+
+    @pytest.fixture(scope="function", autouse=True)
+    def setup(self, browser):
+        link = "http://selenium1py.pythonanywhere.com/accounts/login/"
+        email = f"{str(time.time())}@fakemail.org"
+        password = f"{str(time.time())}password"
+        page = LoginPage(browser, link)
+        page.open()
+        page.register_new_user(email, password)
+        page.should_be_authorized_user()
+
+    def test_user_cant_see_success_message(self, browser):
+        link = "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/"
+        page = ProductPage(browser, link)
+        page.open()
+        assert page.is_not_element_present(*ProductPageLocators.MODAL_PRODUCT_ADDED_TO_CART), "element is present"
+
+    def test_user_can_add_product_to_basket(self, browser):
+        link = "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/"
+        page = ProductPage(browser, link)
+        page.open()
+        page.add_product_to_cart()
+        page.should_right_title_product_in_cart()
+        page.should_right_price_product_in_cart()
 
 
 # @pytest.mark.parametrize('link', ["http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer0",

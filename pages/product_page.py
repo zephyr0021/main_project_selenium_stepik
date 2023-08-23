@@ -1,9 +1,10 @@
+import pytest
+
 from .base_page import BasePage
 from .locators import ProductPageLocators
 
 
 class ProductPage(BasePage):
-
     def add_product_to_cart(self):
         add_cart_button = self.find_element_with_EC(*ProductPageLocators.BUTTON_ADD_TO_CART)
         add_cart_button.click()
